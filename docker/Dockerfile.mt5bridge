@@ -1,0 +1,10 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY mt5_bridge/requirements.txt /app/mt5_bridge/
+RUN pip install --no-cache-dir -r /app/mt5_bridge/requirements.txt
+
+COPY mt5_bridge/ /app/mt5_bridge/
+
+CMD ["python", "-m", "mt5_bridge.main"]

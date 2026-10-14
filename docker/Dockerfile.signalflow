@@ -1,0 +1,14 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY signalflow_engine/requirements.txt /app/signalflow_engine/
+RUN pip install --no-cache-dir -r /app/signalflow_engine/requirements.txt
+
+COPY signalflow_engine/ /app/signalflow_engine/
+
+CMD ["python", "-m", "signalflow_engine.main"]
