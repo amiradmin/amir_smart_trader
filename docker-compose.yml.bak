@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  signalflow:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.signalflow
+    container_name: signalflow_engine
+    volumes:
+      - ./signalflow_engine:/app/signalflow_engine
+      - ./data:/app/data
+      - ./logs:/app/logs
+    environment:
+      - PYTHONUNBUFFERED=1
+    env_file:
+      - .env
+    restart: unless-stopped
+
+  mt5_bridge:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.mt5bridge
+    container_name: mt5_bridge
+    volumes:
+      - ./mt5_bridge:/app/mt5_bridge
+      - ./logs:/app/logs
+    environment:
+      - MT5_HOST=host.docker.internal
+      - MT5_PORT=18812
+    env_file:
+      - .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - signalflow
+    restart: unless-stopped
+
+networks:
+  default:
+    name: trader_network
