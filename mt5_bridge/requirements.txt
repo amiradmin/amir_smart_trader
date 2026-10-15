@@ -1,2 +1,2 @@
-pymt5linux>=0.1.0
+mt5-remote>=0.1.0
 python-dotenv>=1.0
