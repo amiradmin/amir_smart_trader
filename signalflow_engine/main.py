@@ -112,7 +112,7 @@ def _emit(decisions_path: Path, decision: Decision) -> None:
 def run_once(cfg: Config) -> int:
     emitted = 0
     now = datetime.now(timezone.utc).isoformat()
-    seen = _existing_signal_ids(cfg.decisions_path)
+    # Deliberately separate from decisions.jsonl, which the legacy bridge may execute.\n    output_path = cfg.data_dir / "research_candidates.jsonl"\n    seen = _existing_signal_ids(output_path)
     for symbol in cfg.symbols:
         for candidate in detect(symbol, cfg.timeframe, cfg.data_dir):
             ok, confidence = validate(candidate)
@@ -139,7 +139,7 @@ def run_once(cfg: Config) -> int:
                 strategy=str(candidate.get("strategy", "ema9_21_atr14_research")),
                 features=candidate.get("features", {}),
             )
-            _emit(cfg.decisions_path, decision)
+            _emit(output_path, decision)
             seen.add(signal_id)
             log.info("Emitted research candidate %s %s conf=%.2f", symbol, side, confidence)
             emitted += 1
@@ -157,7 +157,7 @@ def main() -> int:
     log.info("SignalFlow research mode | symbols=%s tf=%s poll=%ss",
              ",".join(cfg.symbols), cfg.timeframe, cfg.poll_seconds)
     log.info("Closed-candle CSV input: %s/raw/{SYMBOL}_{TIMEFRAME}.csv", cfg.data_dir)
-    log.info("Research decisions -> %s", cfg.decisions_path)
+    log.info("Research-only output -> %s/research_candidates.jsonl", cfg.data_dir)
 
     os_signal.signal(os_signal.SIGTERM, _handle_signal)
     os_signal.signal(os_signal.SIGINT, _handle_signal)
