@@ -27,7 +27,7 @@ class ResearchDetectorTests(unittest.TestCase):
         self.assertEqual(detect_from_bars(make_bars([100.0] * 20), "XAUUSD_o"), [])
 
     def test_upward_ema_cross_has_valid_buy_levels(self):
-        closes = [130.0 - i for i in range(29)] + [120.0]
+        closes = [130.0 - i for i in range(29)] + [180.0]
         candidates = detect_from_bars(make_bars(closes), "XAUUSD_o")
         self.assertEqual(len(candidates), 1)
         candidate = candidates[0]
