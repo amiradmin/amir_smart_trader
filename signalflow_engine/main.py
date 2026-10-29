@@ -2,7 +2,7 @@
 SignalFlow decision engine entry point.
 
 Research pipeline:
-    closed OHLC CSV -> EMA/ATR detector -> basic risk validation -> decisions.jsonl
+    closed OHLC CSV -> EMA/ATR detector -> basic risk validation -> research_candidates.jsonl
 
 This version produces research candidates only. The MT5 bridge must remain disabled
 until candidates have been backtested and execution safeguards independently reviewed.
