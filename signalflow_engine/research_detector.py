@@ -34,7 +34,7 @@ def _load_bars(path: Path) -> list[dict[str, Any]]:
             return []
         time_key = next((names[k] for k in ("time", "timestamp", "datetime") if k in names), None)
         bars = []
-        for row in reader:
+        for row_index, row in enumerate(reader):
             try:
                 bar = {key: float(row[names[key]]) for key in required}
                 if not all(math.isfinite(v) and v > 0 for v in bar.values()):
@@ -43,7 +43,7 @@ def _load_bars(path: Path) -> list[dict[str, Any]]:
                     continue
                 if bar["low"] > min(bar["open"], bar["close"], bar["high"]):
                     continue
-                bar["time"] = (row.get(time_key, "").strip() if time_key else "")
+                bar["time"] = (row.get(time_key, "").strip() if time_key else "") or f"row-{row_index}"
                 bars.append(bar)
             except (TypeError, ValueError):
                 continue
